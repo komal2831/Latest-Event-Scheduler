@@ -1,0 +1,70 @@
+/* app/styles/globals.css */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+  }
+  
+  header {
+    background: #f5f5f5;
+    padding: 10px;
+    text-align: center;
+  }
+  
+  main {
+    padding: 20px;
+  }
+  
+  footer {
+    background: #f5f5f5;
+    padding: 10px;
+    text-align: center;
+  }
+  
+  .calendar {
+    max-width: 500px;
+    margin: auto;
+    padding: 20px;
+  }
+  
+  form {
+    margin: 20px 0;
+  }
+  
+  input {
+    margin-right: 10px;
+  }
+
+
+  /* global.css */
+
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 1rem;
+  box-sizing: border-box;
+}
+
+.content {
+  display: flex;
+  flex-direction: row;
+  flex: 1;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.calendarContainer {
+  flex: 1;
+  margin-right: 1rem;
+  min-width: 300px;
+  box-sizing: border-box;
+}
+
+.eventListContainer {
+  flex: 1;
+  min-width: 300px;
+  box-sizing: border-box;
+}
+
+  
