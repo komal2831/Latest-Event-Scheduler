@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { format, startOfMonth, endOfMonth, eachDayOfInterval, isToday } from 'date-fns';
+import { format, startOfMonth, endOfMonth, eachDayOfInterval, isToday, isWithinInterval, isSameDay } from 'date-fns';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../store/store';
 import { addEvent } from '../store/eventsSlice';
@@ -8,7 +8,7 @@ import EventForm from './EventForm';
 const Calendar: React.FC = () => {
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
-  const [eventToEdit, setEventToEdit] = useState<{ id: string; description: string } | null>(null);
+  const [eventToEdit, setEventToEdit] = useState<{ id: string; startDate: string; endDate: string; description: string } | null>(null);
   const dispatch = useDispatch();
   const events = useSelector((state: RootState) => state.events.events);
 
@@ -21,8 +21,8 @@ const Calendar: React.FC = () => {
     setEventToEdit(null); // Clear eventToEdit when changing the date
   };
 
-  const handleEventClick = (event: { id: string; description: string }) => {
-    setSelectedDate(new Date(event.date)); // Set the selected date to the event date
+  const handleEventClick = (event: { id: string; startDate: string; endDate: string; description: string }) => {
+    setSelectedDate(new Date(event.startDate)); // Set the selected date to the event's start date
     setEventToEdit(event); // Set the event to edit
   };
 
@@ -38,12 +38,15 @@ const Calendar: React.FC = () => {
             onClick={() => handleDateClick(day)}
           >
             {format(day, 'd')}
-            {events.filter(event => format(new Date(event.date), 'yyyy-MM-dd') === format(day, 'yyyy-MM-dd'))
-              .map(event => (
-                <div key={event.id} className="event-marker" onClick={(e) => { e.stopPropagation(); handleEventClick(event); }}>
-                  {event.description}
-                </div>
-              ))}
+            {events.filter(event =>
+              isWithinInterval(day, { start: new Date(event.startDate), end: new Date(event.endDate) }) ||
+              isSameDay(day, new Date(event.startDate)) || 
+              isSameDay(day, new Date(event.endDate))
+            ).map(event => (
+              <div key={event.id} className="event-marker" onClick={(e) => { e.stopPropagation(); handleEventClick(event); }}>
+                {event.description}
+              </div>
+            ))}
           </div>
         ))}
       </div>

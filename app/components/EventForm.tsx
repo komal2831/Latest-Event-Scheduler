@@ -5,33 +5,51 @@ import { format } from 'date-fns';
 
 interface EventFormProps {
   selectedDate: Date;
-  existingEvent?: { id: string; description: string }; // Optional prop for editing
+  existingEvent?: { id: string; startDate: string; endDate: string; description: string }; // Optional prop for editing
 }
 
 const EventForm: React.FC<EventFormProps> = ({ selectedDate, existingEvent }) => {
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
   const [description, setDescription] = useState('');
   const dispatch = useDispatch();
 
   useEffect(() => {
     if (existingEvent) {
+      setStartDate(existingEvent.startDate);
+      setEndDate(existingEvent.endDate);
       setDescription(existingEvent.description);
     } else {
-      setDescription('');
+      const formattedDate = format(selectedDate, 'yyyy-MM-dd');
+      setStartDate(formattedDate);
+      setEndDate(formattedDate);
     }
-  }, [existingEvent]);
+  }, [existingEvent, selectedDate]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (existingEvent) {
-      dispatch(updateEvent({ id: existingEvent.id, description }));
+      dispatch(updateEvent({ id: existingEvent.id, startDate, endDate, description }));
     } else {
-      dispatch(addEvent({ date: format(selectedDate, 'yyyy-MM-dd'), description }));
+      dispatch(addEvent({ startDate, endDate, description }));
     }
+    setStartDate('');
+    setEndDate('');
     setDescription('');
   };
 
   return (
     <form onSubmit={handleSubmit}>
+      <input
+        type="date"
+        value={startDate}
+        onChange={(e) => setStartDate(e.target.value)}
+      />
+      <input
+        type="date"
+        value={endDate}
+        onChange={(e) => setEndDate(e.target.value)}
+      />
       <textarea
         value={description}
         onChange={(e) => setDescription(e.target.value)}
