@@ -52,3 +52,108 @@ textarea {
 button {
   margin-top: 10px;
 }
+
+.event-form {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px; 
+}
+
+.form-group {
+  display: flex;
+  gap: 10px;
+}
+
+.form-field {
+  margin: 0;
+  box-sizing: border-box;
+}
+
+.form-button {
+  padding: 10px 20px;
+  border: none;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.add-button {
+  background-color: blue;
+}
+
+.update-button {
+  background-color: yellow; 
+  color: black; 
+}
+
+
+/* makin grid layout.tsx */
+.calendar-event-container {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 16px;
+  padding: 16px;
+}
+
+.calendar, .event-list {
+  background: #f5f5f5;
+  padding: 16px;
+  border-radius: 8px;
+}
+
+@media (max-width: 768px) {
+  .calendar-event-container {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Event list css  */
+
+.event-container {
+  text-align: center;
+}
+
+.event-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+}
+
+.event-table th, .event-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+.event-table th {
+  background-color: #f4f4f4;
+  font-weight: bold;
+}
+
+.event-table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.event-table tr:hover {
+  background-color: #f1f1f1;
+}
+
+.event-table button {
+  background-color: #ff4d4d;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.event-table button:hover {
+  background-color: #ff1a1a; 
+}
+
+.no-events {
+  font-style: bold;
+  color: #666;
+  margin: 150px 0; 
+}

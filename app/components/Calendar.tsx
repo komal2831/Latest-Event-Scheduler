@@ -21,7 +21,6 @@ const Calendar: React.FC = () => {
     const eventStart = new Date(event.startDate);
     const eventEnd = new Date(event.endDate);
 
-    // Check if the event overlaps with the current month
     return isWithinInterval(eventStart, { start, end }) ||
            isWithinInterval(eventEnd, { start, end }) ||
            (eventStart < start && eventEnd > end);
@@ -29,12 +28,12 @@ const Calendar: React.FC = () => {
 
   const handleDateClick = (date: Date) => {
     setSelectedDate(date);
-    setEventToEdit(null); // Clear eventToEdit when changing the date
+    setEventToEdit(null);
   };
 
   const handleEventClick = (event: { id: string; startDate: string; endDate: string; description: string }) => {
-    setSelectedDate(new Date(event.startDate)); // Set the selected date to the event's start date
-    setEventToEdit(event); // Set the event to edit
+    setSelectedDate(new Date(event.startDate)); 
+    setEventToEdit(event); 
   };
 
   const handlePreviousMonth = () => {
