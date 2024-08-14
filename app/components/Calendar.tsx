@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import { format, startOfMonth, endOfMonth, eachDayOfInterval, isToday, isWithinInterval, isSameDay } from 'date-fns';
+import { format, startOfMonth, endOfMonth, eachDayOfInterval, isToday, isWithinInterval, isSameDay, addMonths } from 'date-fns';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../store/store';
-import { addEvent } from '../store/eventsSlice';
 import EventForm from './EventForm';
 
 const Calendar: React.FC = () => {
@@ -12,9 +11,21 @@ const Calendar: React.FC = () => {
   const dispatch = useDispatch();
   const events = useSelector((state: RootState) => state.events.events);
 
+  // Calculate start and end of the current month
   const start = startOfMonth(currentMonth);
   const end = endOfMonth(currentMonth);
   const days = eachDayOfInterval({ start, end });
+
+  // Filter events that span the current month
+  const filteredEvents = events.filter(event => {
+    const eventStart = new Date(event.startDate);
+    const eventEnd = new Date(event.endDate);
+
+    // Check if the event overlaps with the current month
+    return isWithinInterval(eventStart, { start, end }) ||
+           isWithinInterval(eventEnd, { start, end }) ||
+           (eventStart < start && eventEnd > end);
+  });
 
   const handleDateClick = (date: Date) => {
     setSelectedDate(date);
@@ -26,10 +37,18 @@ const Calendar: React.FC = () => {
     setEventToEdit(event); // Set the event to edit
   };
 
+  const handlePreviousMonth = () => {
+    setCurrentMonth(prev => addMonths(prev, -1));
+  };
+
+  const handleNextMonth = () => {
+    setCurrentMonth(prev => addMonths(prev, 1));
+  };
+
   return (
     <div>
-      <button onClick={() => setCurrentMonth(prev => new Date(prev.setMonth(prev.getMonth() - 1)))}>Previous</button>
-      <button onClick={() => setCurrentMonth(prev => new Date(prev.setMonth(prev.getMonth() + 1)))}>Next</button>
+      <button onClick={handlePreviousMonth}>Previous</button>
+      <button onClick={handleNextMonth}>Next</button>
       <div className="calendar-grid">
         {days.map(day => (
           <div
@@ -38,9 +57,9 @@ const Calendar: React.FC = () => {
             onClick={() => handleDateClick(day)}
           >
             {format(day, 'd')}
-            {events.filter(event =>
+            {filteredEvents.filter(event =>
               isWithinInterval(day, { start: new Date(event.startDate), end: new Date(event.endDate) }) ||
-              isSameDay(day, new Date(event.startDate)) || 
+              isSameDay(day, new Date(event.startDate)) ||
               isSameDay(day, new Date(event.endDate))
             ).map(event => (
               <div key={event.id} className="event-marker" onClick={(e) => { e.stopPropagation(); handleEventClick(event); }}>
