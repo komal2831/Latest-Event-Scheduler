@@ -1,45 +1,43 @@
-'use client';
-
-import { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { addEvent } from '../store/eventsSlice';
-import { AppDispatch } from '../store/store';
-import './EventTable.css';
+import { addEvent, updateEvent } from '../store/eventsSlice';
+import { format } from 'date-fns';
 
 interface EventFormProps {
   selectedDate: Date;
+  existingEvent?: { id: string; description: string }; // Optional prop for editing
 }
 
-/**
- * EventForm component allows users to add events for the selected date.
- * It includes a textarea for entering the event description and a submit button.
- * On form submission, the event is dispatched to the Redux store.
- * 
- * @param {EventFormProps} props - Contains the selected date for the event.
- */
-const EventForm: React.FC<EventFormProps> = ({ selectedDate }) => {
+const EventForm: React.FC<EventFormProps> = ({ selectedDate, existingEvent }) => {
   const [description, setDescription] = useState('');
-  const dispatch: AppDispatch = useDispatch();
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (existingEvent) {
+      setDescription(existingEvent.description);
+    } else {
+      setDescription('');
+    }
+  }, [existingEvent]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (description.trim()) {
-      dispatch(addEvent({ date: selectedDate, description }));
-      setDescription('');
+    if (existingEvent) {
+      dispatch(updateEvent({ id: existingEvent.id, description }));
+    } else {
+      dispatch(addEvent({ date: format(selectedDate, 'yyyy-MM-dd'), description }));
     }
+    setDescription('');
   };
 
   return (
-    <form onSubmit={handleSubmit} className="eventForm">
+    <form onSubmit={handleSubmit}>
       <textarea
         value={description}
         onChange={(e) => setDescription(e.target.value)}
         placeholder="Event description"
-        className="eventFormTextarea"
       />
-      <button type="submit" className="eventFormButton">
-        Add Event
-      </button>
+      <button type="submit">{existingEvent ? 'Update Event' : 'Add Event'}</button>
     </form>
   );
 };

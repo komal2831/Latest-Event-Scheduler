@@ -1,70 +1,46 @@
-/* app/styles/globals.css */
 body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-  }
-  
-  header {
-    background: #f5f5f5;
-    padding: 10px;
-    text-align: center;
-  }
-  
-  main {
-    padding: 20px;
-  }
-  
-  footer {
-    background: #f5f5f5;
-    padding: 10px;
-    text-align: center;
-  }
-  
-  .calendar {
-    max-width: 500px;
-    margin: auto;
-    padding: 20px;
-  }
-  
-  form {
-    margin: 20px 0;
-  }
-  
-  input {
-    margin-right: 10px;
-  }
-
-
-  /* global.css */
-
-.container {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  padding: 1rem;
-  box-sizing: border-box;
+  font-family: Arial, sans-serif;
 }
 
-.content {
-  display: flex;
-  flex-direction: row;
-  flex: 1;
-  margin-bottom: 1rem;
-  flex-wrap: wrap;
+header {
+  background-color: #f8f9fa;
+  padding: 10px;
+  text-align: center;
 }
 
-.calendarContainer {
-  flex: 1;
-  margin-right: 1rem;
-  min-width: 300px;
-  box-sizing: border-box;
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 1px;
 }
 
-.eventListContainer {
-  flex: 1;
-  min-width: 300px;
-  box-sizing: border-box;
+.calendar-day {
+  padding: 10px;
+  border: 1px solid #ddd;
+  text-align: center;
+  cursor: pointer;
 }
 
-  
+.calendar-day.today {
+  background-color: #f0f8ff;
+}
+
+.event-marker {
+  background-color: #ff6347;
+  color: white;
+  padding: 2px;
+  border-radius: 3px;
+}
+
+form {
+  margin-top: 20px;
+}
+
+textarea {
+  width: 100%;
+  height: 60px;
+}
+
+button {
+  margin-top: 10px;
+}

@@ -1,7 +1,9 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { formatISO } from 'date-fns';
 
 interface Event {
-  date: Date;
+  id: string;
+  date: string;
   description: string;
 }
 
@@ -10,30 +12,32 @@ interface EventsState {
 }
 
 const initialState: EventsState = {
-  events: []
+  events: [],
 };
 
-// Create a slice of the Redux store for managing events
 const eventsSlice = createSlice({
   name: 'events',
   initialState,
   reducers: {
-    setEvents(state, action: PayloadAction<Event[]>) {
-      state.events = action.payload;
+    addEvent: (state, action: PayloadAction<{ date: string; description: string }>) => {
+      const newEvent: Event = {
+        id: formatISO(new Date()), // Unique ID for the event
+        date: action.payload.date,
+        description: action.payload.description,
+      };
+      state.events.push(newEvent);
     },
-    addEvent(state, action: PayloadAction<Event>) {
-      state.events.push(action.payload);
+    deleteEvent: (state, action: PayloadAction<string>) => {
+      state.events = state.events.filter(event => event.id !== action.payload);
     },
-    editEvent(state, action: PayloadAction<{ index: number; newDescription: string; newDate: Date }>) {
-      const { index, newDescription, newDate } = action.payload;
-      state.events[index] = { ...state.events[index], description: newDescription, date: newDate };
+    updateEvent: (state, action: PayloadAction<{ id: string; description: string }>) => {
+      const event = state.events.find(event => event.id === action.payload.id);
+      if (event) {
+        event.description = action.payload.description;
+      }
     },
-    deleteEvent(state, action: PayloadAction<number>) {
-      state.events = state.events.filter((_, i) => i !== action.payload);
-    }
-  }
+  },
 });
 
-
-export const { setEvents, addEvent, editEvent, deleteEvent } = eventsSlice.actions;
+export const { addEvent, deleteEvent, updateEvent } = eventsSlice.actions;
 export default eventsSlice.reducer;
